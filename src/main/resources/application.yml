@@ -1,0 +1,12 @@
+server:
+  port: 5007
+spring:
+  main:
+    allow-circular-references: true
+  data:
+    mongodb:
+
+      uri:  mongodb://localhost:27017/unitTest
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
