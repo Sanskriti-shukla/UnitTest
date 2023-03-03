@@ -1,4 +1,5 @@
 package com.example.unitTest.controller;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,11 +10,16 @@ import com.example.unitTest.model.User;
 import com.example.unitTest.service.UserService;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.math3.util.Pair;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-    @RestController
-    @RequestMapping("userInfo")
+@RestController
+    @RequestMapping("users")
     public class UserController {
+
 
         private final UserService userService;
 
@@ -79,7 +85,40 @@ import org.springframework.web.bind.annotation.*;
             return dataResponse;
         }
 
+    @RequestMapping(name = "addEmail",value = "/add/email", method = RequestMethod.GET)
+    public DataResponse<List<User>> addEmail()  {
+        DataResponse<List< User>>  dataResponse = new DataResponse<>();
+        dataResponse.setData(userService.addEmail());
+        dataResponse.setStatus(Response.getOkResponse(ResponseConstant.OK));
+        return dataResponse;
+    }
+
+
+
+    @PostMapping
+    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
+        String uploadImage = userService.uploadImage(file);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(uploadImage);
+    }
+
+    @GetMapping("/{fileName}")
+    public ResponseEntity<?> downloadImage(@PathVariable String fileName){
+        byte[] imageData=userService.downloadImage(fileName);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
 
     }
+
+}
+
+
+
+
+
+
+
+
 
 
